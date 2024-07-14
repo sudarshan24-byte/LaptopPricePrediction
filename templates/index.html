@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Laptop Price Prediction Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #prediction-result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+            width: 200px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Laptop Price Prediction Prediction</h1>
+    <div id="prediction-form">
+        <div class="form-group">
+            <label for="manufacturer">Manufacturer:</label>
+            <input type="text" id="manufacturer" name="manufacturer">
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <input type="number" id="category" name="category">
+        </div>
+        <div class="form-group">
+            <label for="screen">Screen:</label>
+            <input type="text" id="screen" name="screen">
+        </div>
+        <div class="form-group">
+            <label for="gpu">GPU:</label>
+            <input type="number" id="gpu" name="gpu">
+        </div>
+        <div class="form-group">
+            <label for="os">OS:</label>
+            <input type="number" id="os" name="os">
+        </div>
+        <div class="form-group">
+            <label for="cpu_core">CPU Core:</label>
+            <input type="number" id="cpu_core" name="cpu_core">
+        </div>
+        <div class="form-group">
+            <label for="screen_size">Screen Size:</label>
+            <input type="number" id="screen_size" name="screen_size">
+        </div>
+        <div class="form-group">
+            <label for="cpu_frequency">CPU Frequency:</label>
+            <input type="number" id="cpu_frequency" name="cpu_frequency">
+        </div>
+        <div class="form-group">
+            <label for="ram">RAM GB:</label>
+            <input type="number" id="ram" name="ram">
+        </div>
+        <div class="form-group">
+            <label for="storage">Storage GB:</label>
+            <input type="number" id="storage" name="storage">
+        </div>
+        <div class="form-group">
+            <label for="weight">Weight KG:</label>
+            <input type="number" id="weight" name="weight">
+        </div>
+        <button onclick="predict()">Predict</button>
+    </div>
+    <div id="prediction-result"></div>
+
+    <script>
+        async function predict() {
+            const data = {
+                "Manufacturer": document.getElementById("manufacturer").value,
+                "Category": parseFloat(document.getElementById("category").value),
+                "Screen": document.getElementById("screen").value,
+                "GPU": parseFloat(document.getElementById("gpu").value),
+                "OS": parseFloat(document.getElementById("os").value),
+                "CPU_core": parseFloat(document.getElementById("cpu_core").value),
+                "Screen_Size_cm": parseFloat(document.getElementById("screen_size").value),
+                "CPU_frequency": parseFloat(document.getElementById("cpu_frequency").value),
+                "RAM_GB": parseFloat(document.getElementById("ram").value),
+                "Storage_GB_SSD": parseFloat(document.getElementById("storage").value),
+                "Weight_kg": parseFloat(document.getElementById("weight").value)
+            };
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                document.getElementById('prediction-result').innerText = `Predicted Price: ₹${result.prediction}`;
+            } catch (error) {
+                console.error('There was an error:', error);
+                document.getElementById('prediction-result').innerText = 'Error predicting';
+            }
+        }
+    </script>
+</body>
+</html>
